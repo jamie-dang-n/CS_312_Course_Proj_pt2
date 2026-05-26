@@ -1,1 +1,9 @@
-# CS_312_Course_Proj_pt2
+# Background
+
+# Requirements
+
+# Pipeline Diagram
+
+# Commands to run
+
+# Connecting to the Minecraft Server
