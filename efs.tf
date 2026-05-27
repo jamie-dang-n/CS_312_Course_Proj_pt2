@@ -13,9 +13,8 @@ module "efs" {
 
   security_group_rules = {
     vpc = {
-      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
-      description = "NFS ingress from VPC public subnets"
-      cidr_blocks = module.vpc.public_subnets_cidr_blocks
+      description = "NFS ingress from ECS service security group"
+      cidr_blocks = aws_security_group.ecs_service.id
     }
   }
 

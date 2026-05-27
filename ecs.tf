@@ -143,14 +143,6 @@ resource "aws_security_group" "ecs_service" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port       = 2049
-    to_port         = 2049
-    protocol        = "tcp"
-    description     = "NFS Port"
-    security_groups = [module.efs.security_group_id]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
