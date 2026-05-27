@@ -62,7 +62,7 @@ Terraform handles setting up the ECS, EFS, and VPC, in `ecs.tf`, `efs.tf`, and `
     - Optionally, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html)
 
 # Connecting to the Minecraft Server
-Run the commands in Step 7 of "[Commands to run](#commands-to-run)". Then, copy the IP address to directly connect to the server in Minecraft.
+Run the commands in Step 7 of "[Running the Minecraft Server](#running-the-minecraft-server)". Then, copy the IP address to directly connect to the server in Minecraft.
 
 # References
 \[1\] [https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting](https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting)
