@@ -177,18 +177,18 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-# Create Elastic IP for the Minecraft server -- associates a static IP to the server
-resource "aws_eip" "minecraft" {
-  domain = "vpc"
-  tags = {
-    Name        = "minecraft-server-eip"
-    Environment = "Development"
-    Project     = "Minecraft"
-  }
-}
+# # Create Elastic IP for the Minecraft server -- associates a static IP to the server
+# resource "aws_eip" "minecraft" {
+#   domain = "vpc"
+#   tags = {
+#     Name        = "minecraft-server-eip"
+#     Environment = "Development"
+#     Project     = "Minecraft"
+#   }
+# }
 
-# Associate the Elastic IP with the ECS task's ENI
-resource "aws_eip_association" "minecraft" {
-  allocation_id = aws_eip.minecraft.id
-  network_interface_id = module.ecs.services["minecraft-vanilla"].network_configuration[0].network_interface_id
-}
+# # Associate the Elastic IP with the ECS task's ENI
+# resource "aws_eip_association" "minecraft" {
+#   allocation_id = aws_eip.minecraft.id
+#   network_interface_id = module.ecs.services["minecraft-vanilla"].network_configuration[0].network_interface_id
+# }
