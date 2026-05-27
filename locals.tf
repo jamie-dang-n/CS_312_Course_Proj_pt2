@@ -5,6 +5,7 @@ locals {
   container_port = 25565
 
   # Minecraft related
+  whitelist_list = "${var.minecraft_username}"
   difficulty     = "normal"
 
   # VPC
