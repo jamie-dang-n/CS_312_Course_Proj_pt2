@@ -5,16 +5,17 @@ This project fully automates the provisioning, configuring, and setup of a Minec
 For this, you will need to have:
 - An AWS account
 - Terraform installed
-- AWS CLI installed
+- AWS CLI installed, AWS account logged in
 
 # Pipeline Diagram
 
 
 # Commands to run
-1. Run `git clone ` to clone this repository.
+1. Run `git clone https://github.com/jamie-dang-n/CS_312_Course_Proj_pt2.git` to clone this repository.
 2. CD into `CS_312_Course_Proj_pt2`. 
-3. 
-4.  
+3. Run `terraform init` to initialize Terraform
+4. Run `terraform plan` to error-check the cloned `.tf` files
+5. Run `terraform apply` to spin up the Minecraft server
 
 # Connecting to the Minecraft Server
 
