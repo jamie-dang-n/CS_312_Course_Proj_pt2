@@ -1,3 +1,7 @@
+data "aws_iam_role" "lab_role" {
+  name = "LabRole"
+}
+
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
   version = "~> 5.12"
@@ -28,6 +32,12 @@ module "ecs" {
 
       # Enable execute command
       enable_execute_command = true
+
+      # Supply pre-existing iam roles, disable module's IAM role creation
+      create_task_exec_iam_role = false
+      task_exec_iam_role_arn    = data.aws_iam_role.lab_role.arn
+      create_tasks_iam_role     = false
+      tasks_iam_role_arn        = data.aws_iam_role.lab_role.arn
 
       volume = [
         {
