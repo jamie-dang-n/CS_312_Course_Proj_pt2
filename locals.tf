@@ -11,6 +11,6 @@ locals {
   # VPC
   cidr            = "10.168.1.0/26"
   private_subnets = ["10.168.1.0/28", "10.168.1.16/28"]
-  public_subnets  = ["10.168.1.32/28", "10.168.1.48/28"]
+  public_subnets  = ["10.168.1.32/28", "10.168.1.48/28"] # Currently us-east-1a / us-east-1b
   azs             = slice(data.aws_availability_zones.available.names, 0, 2)
 }
