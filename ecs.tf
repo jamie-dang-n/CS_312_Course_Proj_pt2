@@ -30,6 +30,8 @@ module "ecs" {
       cpu    = 2048
       memory = 4096
 
+      create_security_group = false
+
       # Enable execute command
       enable_execute_command = true
 
