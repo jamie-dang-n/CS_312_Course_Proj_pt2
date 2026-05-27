@@ -1,5 +1,5 @@
 # Background
-This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]]((https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting)), with cost-lowering revisions by [\[2\]]((https://github.com/siakon89/minecraft-server/tree/budget-server)). 
+This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]]((https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting)), with cost-lowering revisions by [\[2\]]((https://github.com/siakon89/minecraft-server/tree/budget-server)). Some modifications were made to use the provided IAM role, `LabRole`, as this project was done on AWS Learner Lab.
 
 # Requirements
 For this, you will need to have:
@@ -33,7 +33,13 @@ graph TD
     Task -->|"logs"| CW["CloudWatch Logs (/aws/ecs/minecraft-servers)"]
     LabRole["IAM LabRole"] -->|"task execution"| Task
 ```
-# Commands to run
+
+## Pipeline Stages
+Terraform handles setting up the ECS, EFS, and VPC, in `ecs.tf`, `efs.tf`, and `vpc.tf`, respectively. The file `locals.tf` contains configurable data, such as the CIDR to use for the VPC. 
+
+(WIP)
+
+# Running the Minecraft Server
 1. Run `git clone https://github.com/jamie-dang-n/CS_312_Course_Proj_pt2.git` to clone this repository.
 2. `cd` into `CS_312_Course_Proj_pt2`. 
 3. Run `terraform init` to initialize Terraform
