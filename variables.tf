@@ -1,0 +1,1 @@
+variable "minecraft_username" {}

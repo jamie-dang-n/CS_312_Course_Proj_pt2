@@ -13,7 +13,7 @@ For this, you will need to have:
 # Commands to run
 1. Run `git clone ` to clone this repository.
 2. CD into `CS_312_Course_Proj_pt2`. 
-3. Run `vim terraform.tfvars` and add `minecraft_username=<your minecraft username>` to the file. Save it with `:wq`. 
+3. 
 4.  
 
 # Connecting to the Minecraft Server
