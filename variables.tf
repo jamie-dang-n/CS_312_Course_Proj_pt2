@@ -1,1 +1,0 @@
-variable "minecraft_username" {}

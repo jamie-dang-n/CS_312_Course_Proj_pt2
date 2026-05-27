@@ -98,10 +98,6 @@ module "ecs" {
               value = "TRUE"
             },
             {
-              name  = "WHITELIST"
-              value = local.whitelist_list
-            },
-            {
               name  = "DIFFICULTY"
               value = local.difficulty
             },
