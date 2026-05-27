@@ -1,5 +1,5 @@
 locals {
-  region = local.region
+  region = "us-east-1"
 
   # Container
   container_port = 25565
