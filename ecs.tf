@@ -38,7 +38,6 @@ module "ecs" {
             transit_encryption = "ENABLED"
             root_directory     = "/"
             authorization_config = {
-              iam             = "ENABLED"
               access_point_id = module.efs.access_points["vanilla_minecraft"].id
             }
           }
@@ -63,13 +62,6 @@ module "ecs" {
 
       # Use the dedicated security group
       security_group_ids = [aws_security_group.ecs_service.id]
-
-      # add access to EFS and KMS in the task role
-      tasks_iam_role_policies = {
-        efs_access = aws_iam_policy.efs_access_policy.arn
-        # kms_access = aws_iam_policy.efs_kms_access_policy.arn
-        ssm_access = aws_iam_policy.ssm_session_manager_policy.arn
-      }
 
       # Container definition(s) -- Minecraft uses Docker image (https://github.com/itzg/docker-minecraft-server)
       container_definitions = {
@@ -125,20 +117,6 @@ module "ecs" {
       }
     }
   }
-
-  # Create task execution role and attach policies for EFS
-  create_task_exec_iam_role = true
-  task_exec_iam_role_name   = "minecraft-exec-role"
-  task_exec_iam_role_policies = {
-    efs_access = aws_iam_policy.efs_access_policy.arn
-    # kms_access = aws_iam_policy.efs_kms_access_policy.arn
-    ssm_access = aws_iam_policy.ssm_session_manager_policy.arn
-  }
-
-  tags = {
-    Environment = "Development"
-    Project     = "Minecraft"
-  }
 }
 
 # Create a dedicated security group for the ECS service
@@ -177,19 +155,3 @@ resource "aws_security_group" "ecs_service" {
     Project     = "Minecraft"
   }
 }
-
-# # Create Elastic IP for the Minecraft server -- associates a static IP to the server
-# resource "aws_eip" "minecraft" {
-#   domain = "vpc"
-#   tags = {
-#     Name        = "minecraft-server-eip"
-#     Environment = "Development"
-#     Project     = "Minecraft"
-#   }
-# }
-
-# # Associate the Elastic IP with the ECS task's ENI
-# resource "aws_eip_association" "minecraft" {
-#   allocation_id = aws_eip.minecraft.id
-#   network_interface_id = module.ecs.services["minecraft-vanilla"].network_configuration[0].network_interface_id
-# }

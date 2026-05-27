@@ -6,32 +6,6 @@ module "efs" {
   name           = "minecraft-volume"
   creation_token = "minecraft-volume"
 
-#   # Encrypted storage -- good practice
-#   encrypted      = true
-#   kms_key_arn    = module.kms.key_arn
-
-  # File system policy
-  attach_policy                      = true
-  bypass_policy_lockout_safety_check = false
-
-  policy_statements = [
-    {
-      sid = "Example"
-      actions = [
-        "elasticfilesystem:ClientMount",
-        "elasticfilesystem:ClientWrite",
-        "elasticfilesystem:ClientRootAccess",
-        "elasticfilesystem:DescribeFileSystems"
-      ]
-      principals = [
-        {
-          type        = "AWS"
-          identifiers = [module.ecs.task_exec_iam_role_arn]
-        }
-      ]
-    }
-  ]
-
   # Mount targets / security group
   mount_targets              = { for k, v in zipmap(module.vpc.azs, module.vpc.public_subnets) : k => { subnet_id = v } }
   security_group_description = "EFS security group for minecraft server"
