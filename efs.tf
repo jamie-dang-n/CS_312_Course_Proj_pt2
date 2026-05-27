@@ -14,7 +14,7 @@ module "efs" {
   security_group_rules = {
     vpc = {
       description = "NFS ingress from ECS service security group"
-      cidr_blocks = aws_security_group.ecs_service.id
+      cidr_blocks = [module.vpc.vpc_cidr_block]
     }
   }
 
