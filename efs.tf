@@ -16,6 +16,15 @@ module "efs" {
       description = "NFS ingress from ECS service security group"
       cidr_blocks = [module.vpc.vpc_cidr_block]
     }
+
+    egress = {
+      type        = "egress"
+      description = "Allow all outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 
   access_points = {
