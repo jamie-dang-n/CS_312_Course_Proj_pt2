@@ -45,7 +45,7 @@ module "ecs" {
 
           efs_volume_configuration = {
             file_system_id     = module.efs.id
-            transit_encryption = "DISABLED"
+            transit_encryption = "ENABLED"
             root_directory     = "/"
             authorization_config = {
               access_point_id = module.efs.access_points["vanilla_minecraft"].id
