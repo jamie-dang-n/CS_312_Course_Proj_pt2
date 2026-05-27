@@ -74,9 +74,10 @@ module "ecs" {
       # Container definition(s) -- Minecraft uses Docker image (https://github.com/itzg/docker-minecraft-server)
       container_definitions = {
         minecraft-vanilla-task = {
-          cpu    = 2048
-          memory = 4096
-          image  = "itzg/minecraft-server:latest"
+          cpu       = 2048
+          memory    = 4096
+          image     = "itzg/minecraft-server:latest"
+          restart   = "always"
 
           port_mappings = [
             {
@@ -114,7 +115,7 @@ module "ecs" {
             }
           ]
 
-          # Example image used requires access to write to root filesystem
+          # Image used requires access to write to root filesystem
           readonly_root_filesystem = false
           memory_reservation       = 100
 
