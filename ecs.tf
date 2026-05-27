@@ -97,6 +97,10 @@ module "ecs" {
               name  = "EULA"
               value = "TRUE"
             },
+            { 
+              name = "ENFORCE_WHITELIST", 
+              value = "false" 
+            },
             {
               name  = "DIFFICULTY"
               value = local.difficulty
