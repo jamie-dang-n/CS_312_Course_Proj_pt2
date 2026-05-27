@@ -1,5 +1,5 @@
 # Background
-This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image [\[4\]](https://github.com/itzg/docker-minecraft-server) and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]](https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting), with cost-lowering revisions by [\[2\]](https://github.com/siakon89/minecraft-server/tree/budget-server). Some modifications were made to use the provided IAM role, `LabRole`, as this project was done on AWS Learner Lab.
+This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image [\[4\]](#references) and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]](#references), with cost-lowering revisions by [\[2\]](#references). Some modifications were made to use the provided IAM role, `LabRole`, as this project was done on AWS Learner Lab.
 
 # Requirements
 For this, you will need to have:
@@ -44,7 +44,7 @@ Terraform handles setting up the ECS, EFS, and VPC, in `ecs.tf`, `efs.tf`, and `
 2. `cd` into `CS_312_Course_Proj_pt2`. 
 3. Run `terraform init` to initialize Terraform
 4. Run `terraform plan` to error-check the cloned `.tf` files
-   - There should be no error messages, but if there are, refer to the Terraform and AWS documentation for support [\[3\]](https://registry.terraform.io/providers/hashicorp/aws/latest/docs).
+   - There should be no error messages, but if there are, refer to the Terraform and AWS documentation for support [\[3\]](#references).
 5. Run `terraform apply` to spin up the Minecraft server
    - If prompted, supply your Minecraft username to whitelist your connection to the server
 6. Wait for about 5 minutes for the Minecraft server to start
