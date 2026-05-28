@@ -8,7 +8,7 @@ For this, you will need to have:
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed, AWS account logged in
 - [Git](https://git-scm.com/), for cloning this repository
 
-# Pipeline Diagram
+# Architecture Diagram
 ```mermaid
 graph TD
     Player["Minecraft Player - Port 25565"] --> IGW["Internet gateway"]
@@ -34,6 +34,8 @@ graph TD
     LabRole["IAM LabRole"] -->|"task execution"| Task
 ```
 
+# Pipeline Diagram
+(WIP)
 ## Pipeline Stages
 Terraform handles setting up the ECS, EFS, and VPC, in `ecs.tf`, `efs.tf`, and `vpc.tf`, respectively. The file `locals.tf` contains configurable data, such as the CIDR to use for the VPC. 
 
