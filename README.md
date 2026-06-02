@@ -99,6 +99,8 @@ The steps of the pipeline are as follows:
     - Note: The server IP will change, because the IP is not static-- the configuration does not use Elastic IP for cost saving.
     - Optionally, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html)
 
+Note: The CI/CD pipeline set up on this repository is for setting up/tearing down Minecraft server infrastructure with Terraform. I modified the `.yml` files from  [\[5\]](#references) to create the CI/CD pipeline. 
+
 # Connecting to the Minecraft Server
 Run the commands in Step 7 of "[Running the Minecraft Server](#running-the-minecraft-server)". Then, copy the IP address to directly connect to the server in Minecraft.
 
@@ -112,3 +114,5 @@ Alternatively, verify that the server is accessible with `nmap -sV -Pn -p T:<que
 \[3\] [https://registry.terraform.io/providers/hashicorp/aws/latest/docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 
 \[4\] [https://github.com/itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server)
+
+\[5\] [https://dev.to/aws-builders/provisioning-aws-infrastructure-using-terraform-and-github-actions-40ei](https://dev.to/aws-builders/provisioning-aws-infrastructure-using-terraform-and-github-actions-40ei)
