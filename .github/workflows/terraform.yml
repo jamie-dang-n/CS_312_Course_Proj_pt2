@@ -6,7 +6,7 @@ on:
 env:
   TF_VERSION: '1.15.4'
   AWS_REGION: 'us-east-1'
-  BUCKET_NAME: "minecraft-tf-state"
+  BUCKET_NAME: "cs312-dangjam-minecraft-tf-state"
 jobs:
   terraform:
     name: 'Terraform'
