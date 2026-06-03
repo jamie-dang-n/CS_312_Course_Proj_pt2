@@ -9,9 +9,6 @@ terraform {
   }
 
   # s3 backend for maintaining terraform state for github actions
-  backend "s3" {
-    bucket = "cs312-dangjam-minecraft-tf-state"
-    key    = "minecraft/terraform.tfstate"
-    region = "us-east-1"
-  }
+  # Empty for users to configure as needed
+  backend "s3" {}
 }

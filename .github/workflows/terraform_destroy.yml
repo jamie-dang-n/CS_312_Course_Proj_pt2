@@ -50,7 +50,7 @@ jobs:
       # KMS Alias and CloudWatch Log Groups are sometimes left behind by Terraform
       # Manually remove with AWS CLI
       # || true handles the case where a resource doesn't exist
-      - name: Cleanup Remaining Resources
+      - name: Cleanup Possible Remaining Resources
         run: |
           aws kms delete-alias --alias-name alias/efs/minecraft-volume || true
           aws logs delete-log-group --log-group-name /aws/ecs/minecraft-servers || true

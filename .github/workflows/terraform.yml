@@ -6,7 +6,7 @@ on:
 env:
   TF_VERSION: '1.15.4'
   AWS_REGION: 'us-east-1'
-  BUCKET_NAME: "cs312-dangjam-minecraft-tf-state"
+  BUCKET_NAME: ${{ secrets.TF_STATE_BUCKET_NAME }}
 jobs:
   terraform:
     name: 'Terraform'
@@ -45,9 +45,14 @@ jobs:
             echo "Bucket already exists, continuing..."
           fi
 
+      # Pass bucket name at init time
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="bucket=$BUCKET_NAME" \
+            -backend-config="key=minecraft/terraform.tfstate" \
+            -backend-config="region=$AWS_REGION"
 
       - name: Terraform Plan
         id: plan
@@ -69,7 +74,27 @@ jobs:
 
       - name: Wait for ECS Task to Start
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: sleep 30
+        env:
+          CLUSTER_NAME: "minecraft-servers"
+          SERVICE_NAME: "minecraft-vanilla"
+        run: |
+          echo "Waiting for ECS task to be in RUNNING state..."
+          for i in $(seq 1 20); do
+            STATUS=$(aws ecs list-tasks \
+              --cluster $CLUSTER_NAME \
+              --service-name $SERVICE_NAME \
+              --desired-status RUNNING \
+              --query 'taskArns[0]' \
+              --output text)
+            if [ "$STATUS" != "None" ] && [ -n "$STATUS" ]; then
+              echo "Task is running: $STATUS"
+              exit 0
+            fi
+            echo "Attempt $i/20: Task not running yet, waiting 15 seconds..."
+            sleep 15
+          done
+          echo "Timed out waiting for task to start"
+          exit 1
 
       - name: Get Minecraft Server IP
         id: get_ip
