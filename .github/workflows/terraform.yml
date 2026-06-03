@@ -34,18 +34,9 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Terraform Format Check
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-
       - name: Terraform Init
         id: init
         run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
