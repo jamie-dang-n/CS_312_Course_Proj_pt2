@@ -72,32 +72,6 @@ jobs:
           terraform apply -auto-approve -input=false \
             -var="minecraft_username=${{ secrets.MINECRAFT_USERNAME }}"
 
-      - name: Wait for ECS Task to Start
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        env:
-          CLUSTER_NAME: "minecraft-servers"
-          SERVICE_NAME: "minecraft-vanilla"
-        run: |
-          echo "Waiting for ECS task to be in RUNNING state..."
-          for i in $(seq 1 20); do
-            STATUS=$(aws ecs list-tasks \
-              --cluster $CLUSTER_NAME \
-              --service-name $SERVICE_NAME \
-              --desired-status RUNNING \
-              --query 'taskArns[0]' \
-              --output text)
-            if [ "$STATUS" != "None" ] && [ -n "$STATUS" ]; then
-              echo "Task is running: $STATUS"
-              echo "Sleeping for an additional 30 seconds"
-              sleep 30
-              exit 0
-            fi
-            echo "Attempt $i/20: Task not running yet, waiting 15 seconds..."
-            sleep 15
-          done
-          echo "Timed out waiting for task to start"
-          exit 1
-
       - name: Get Minecraft Server IP
         id: get_ip
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -105,28 +79,43 @@ jobs:
           CLUSTER_NAME: "minecraft-servers"
           SERVICE_NAME: "minecraft-vanilla"
         run: |
-          TASK_ARN=$(aws ecs list-tasks \
-            --cluster $CLUSTER_NAME \
-            --service-name $SERVICE_NAME \
-            --query 'taskArns[0]' \
-            --output text)
-          echo "Task ARN: $TASK_ARN"
+          for i in $(seq 1 20); do
+            TASK_ARN=$(aws ecs list-tasks \
+              --cluster $CLUSTER_NAME \
+              --service-name $SERVICE_NAME \
+              --desired-status RUNNING \
+              --query 'taskArns[0]' \
+              --output text)
+            echo "Attempt $i/20 - Task ARN: $TASK_ARN"
 
-          ENI_ID=$(aws ecs describe-tasks \
-            --cluster $CLUSTER_NAME \
-            --tasks $TASK_ARN \
-            --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' \
-            --output text)
-          echo "ENI ID: $ENI_ID"
+            if [ "$TASK_ARN" != "None" ] && [ -n "$TASK_ARN" ]; then
+              ENI_ID=$(aws ecs describe-tasks \
+                --cluster $CLUSTER_NAME \
+                --tasks $TASK_ARN \
+                --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' \
+                --output text)
+              echo "ENI ID: $ENI_ID"
 
-          SERVER_IP=$(aws ec2 describe-network-interfaces \
-            --network-interface-ids $ENI_ID \
-            --query 'NetworkInterfaces[0].Association.PublicIp' \
-            --output text)
-          echo "Server IP: $SERVER_IP"
+              if [ "$ENI_ID" != "None" ] && [ -n "$ENI_ID" ]; then
+                SERVER_IP=$(aws ec2 describe-network-interfaces \
+                  --network-interface-ids $ENI_ID \
+                  --query 'NetworkInterfaces[0].Association.PublicIp' \
+                  --output text)
+                echo "Server IP: $SERVER_IP"
 
-          echo "server_ip=$SERVER_IP" >> $GITHUB_OUTPUT
-          echo "Minecraft Server IP: \`$SERVER_IP\`" >> $GITHUB_STEP_SUMMARY
+                if [ "$SERVER_IP" != "None" ] && [ -n "$SERVER_IP" ]; then
+                  echo "server_ip=$SERVER_IP" >> $GITHUB_OUTPUT
+                  echo "Minecraft Server IP: \`$SERVER_IP\`" >> $GITHUB_STEP_SUMMARY
+                  exit 0
+                fi
+              fi
+            fi
+
+            echo "Not ready yet, waiting 15 seconds..."
+            sleep 15
+          done
+          echo "Timed out waiting for server IP"
+          exit 1
 
   print_server_ip:
     name: 'Print Server IP'

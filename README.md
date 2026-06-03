@@ -172,9 +172,13 @@ This workflow only triggers on pushes to the `main` branch.
 This workflow only triggers manually, after confirming on the GitHub Actions GUI that you want to run the workflow (by writing `delete`). 
 
 # Connecting to the Minecraft Server
-Run the commands in Step 7 of "[Running the Minecraft Server](#running-the-minecraft-server)". Then, copy the IP address to directly connect to the server in Minecraft.
+If following "[Running the Minecraft Server](#running-the-minecraft-server)", then run the commands in Step 7 and copy the IP address to directly connect to the server in Minecraft.
 
-Alternatively, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html)
+If following "[Running via GitHub Actions](#running-via-github-actions)", then navigate to Actions &rarr; (your current workflow) &rarr; "Print Server IP" to view the server's public IP. From there, copy the IP address to directly connect to the server in Minecraft.
+
+
+
+In both cases, you can verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html)
 
 # References
 \[1\] [https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting](https://www.thelastdev.com/p/learning-ecs-the-fun-way-hosting)
