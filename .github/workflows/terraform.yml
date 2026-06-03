@@ -35,7 +35,7 @@ jobs:
 
       - name: Create Terraform State Bucket
         env:
-          BUCKET_NAME: "minecraft-tf-state"
+          BUCKET_NAME: "minecraft-tf-state_dangjam"
         run: |
           if ! aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
             aws s3api create-bucket \
