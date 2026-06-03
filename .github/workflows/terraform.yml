@@ -88,6 +88,8 @@ jobs:
               --output text)
             if [ "$STATUS" != "None" ] && [ -n "$STATUS" ]; then
               echo "Task is running: $STATUS"
+              echo "Sleeping for an additional 30 seconds"
+              sleep 30
               exit 0
             fi
             echo "Attempt $i/20: Task not running yet, waiting 15 seconds..."
