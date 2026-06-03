@@ -39,7 +39,7 @@ graph TD
 flowchart TD
     aws["Modify ~/.aws/credentials to store relevant accses keys and session tokens from AWS"] 
     --> clone[Clone the repository] 
-    --> runInit["Run `terraform init` to initialize Terraform"]
+    --> runInit["Run `terraform init` to initialize Terraform. Supply AWS S3 Bucket if needed for Terraform state."]
     --> spinServer["Running `terraform plan` followed by `terraform apply` spins up the Minecraft server. Terraform handles setting up the ECS, EFS, and VPC, in ecs.tf, efs.tf, and vpc.tf, respectively. "]
     
     
@@ -80,13 +80,14 @@ The steps of the pipeline are as follows:
    ```
 2. Run `git clone https://github.com/jamie-dang-n/CS_312_Course_Proj_pt2.git` to clone this repository.
 3. `cd` into `CS_312_Course_Proj_pt2`. 
-4. Run `terraform init` to initialize Terraform
-5. Run `terraform plan` to error-check the cloned `.tf` files
+4. Edit `locals.tf` as needed to set variables such as AWS region, VPC CIDR, etc.
+5. Run `terraform init` to initialize Terraform
+6. Run `terraform plan` to error-check the cloned `.tf` files
    - There should be no error messages, but if there are, refer to the Terraform and AWS documentation for support [\[3\]](#references).
-6. Run `terraform apply` to spin up the Minecraft server
+7. Run `terraform apply` to spin up the Minecraft server
    - If prompted, supply your Minecraft username to whitelist your connection to the server
-7. Wait for about 5 minutes for the Minecraft server to start
-8. Run the following commands to get the server's IP address:
+8. Wait for about 5 minutes for the Minecraft server to start
+9. Run the following commands to get the server's IP address:
     ```bash
     TASK_ARN=$(aws ecs list-tasks --cluster minecraft-servers --query 'taskArns[0]' --output text)
 
@@ -97,9 +98,78 @@ The steps of the pipeline are as follows:
     --query 'NetworkInterfaces[0].Association.PublicIp' --output text
     ```
     - Note: The server IP will change, because the IP is not static-- the configuration does not use Elastic IP for cost saving.
-    - Optionally, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html)
+    - Optionally, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html).
 
-Note: The CI/CD pipeline set up on this repository is for setting up/tearing down Minecraft server infrastructure with Terraform. I modified the `.yml` files from  [\[5\]](#references) to create the CI/CD pipeline. 
+# Running via GitHub Actions
+Alternatively, the server can be started through GitHub Actions. The pipeline .yml files are stored in `.github/workflows`. 
+
+The CI/CD workflows are for setting up and tearing down Minecraft server infrastructure with Terraform. I modified the `.yml` files from  [\[5\]](#references) to create the CI/CD workflows. 
+
+## Prerequisites
+
+### S3 Bucket
+An S3 bucket is necessary to share Terraform state across different runner instances.
+
+The `terraform.yml` file already creates an S3 bucket if it does not exist, using the secret variable [`TF_STATE_BUCKET_NAME`](#secrets-variables). Therefore, it is not necessary to manually create an S3 bucket before running the CI/CD workflow.
+
+To create a bucket manually anyway:
+
+```bash
+aws s3api create-bucket \
+    --bucket BUCKET_NAME \
+    --region AWS_REGION
+```
+
+If the `terraform.yml` workflow sees that a bucket has already been created, it will continue without failing.
+
+### "Secrets" Variables
+Clone the repository, then define the following "Repository secrets" variables under Settings &rarr; Secrets and Variables &rarr; Actions:
+- Information to access the AWS CLI (given by AWS)
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_REGION`
+  - `AWS_SECRET_ACCESS_KEY`
+  - `AWS_SESSION_TOKEN`
+- `MINECRAFT_USERNAME`: used to whitelist a Minecraft user, giving them access to the server.
+- `TF_STATE_BUCKET_NAME`: used to store Terraform state across runners
+
+## Workflow Steps
+1. Run `git clone https://github.com/jamie-dang-n/CS_312_Course_Proj_pt2.git` to clone this repository.
+2. Set [secret variables](#secrets-variables) in the cloned repository on GitHub under Settings &rarr; Secrets and Variables &rarr; Actions.
+3. `cd` into `CS_312_Course_Proj_pt2`.
+4. Edit `locals.tf` as needed to set variables such as AWS region, VPC CIDR, etc.
+5. When changes get pushed to `main`, 
+
+## Overview of Files
+
+### `terraform.yml`
+
+`terraform.yml` does the following:
+
+1. Check out the repository
+2. Set up Terraform
+3. Configure AWS Credentials
+4. Create the Terraform AWS S3 State Bucket (if it does not already exist)
+5. Initialize Terraform with the S3 State Bucket
+6. Run `terraform plan`
+7. Create infrastructure using `terraform apply`
+8. Wait for ECS task to start
+9.  Get the Minecraft Server IP, then print it in the GitHub Actions GUI
+
+This workflow only triggers on pushes to the `main` branch.
+
+### `terraform-destroy.yml`
+
+`terraform-destroy.yml` does the following:
+
+1. Check out the repository
+2. Set up Terraform
+3. Configure AWS Credentials
+4. Create the Terraform AWS S3 State Bucket (if it does not already exist)
+5. Initialize Terraform with the S3 State Bucket
+6. Destroy all resources with `terraform destroy`
+7. Cleanup possibly-hanging extraneous resources (KMS Alias, CloudWatch Log Groups)
+
+This workflow only triggers manually, after confirming on the GitHub Actions GUI that you want to run the workflow (by writing `delete`). 
 
 # Connecting to the Minecraft Server
 Run the commands in Step 7 of "[Running the Minecraft Server](#running-the-minecraft-server)". Then, copy the IP address to directly connect to the server in Minecraft.
