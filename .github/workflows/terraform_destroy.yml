@@ -46,3 +46,12 @@ jobs:
         run: |
           terraform destroy -auto-approve -input=false \
             -var="minecraft_username=${{ secrets.MINECRAFT_USERNAME }}"
+
+      # KMS Alias and CloudWatch Log Groups are sometimes left behind by Terraform
+      # Manually remove with AWS CLI
+      # || true handles the case where a resource doesn't exist
+      - name: Cleanup Remaining Resources
+        run: |
+          aws kms delete-alias --alias-name alias/efs/minecraft-volume || true
+          aws logs delete-log-group --log-group-name /aws/ecs/minecraft-servers || true
+          aws logs delete-log-group --log-group-name /aws/ecs/minecraft-vanilla/minecraft-vanilla-task || true

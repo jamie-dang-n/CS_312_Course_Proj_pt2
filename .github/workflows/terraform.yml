@@ -33,6 +33,19 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Create Terraform State Bucket
+        env:
+          BUCKET_NAME: "minecraft-tf-state"
+        run: |
+          if ! aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
+            aws s3api create-bucket \
+              --bucket $BUCKET_NAME \
+              --region ${{ env.AWS_REGION }}
+            echo "Bucket created: $BUCKET_NAME"
+          else
+            echo "Bucket already exists, continuing..."
+          fi
+
       - name: Terraform Init
         id: init
         run: terraform init
