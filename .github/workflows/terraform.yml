@@ -2,7 +2,7 @@ name: 'Terraform CI/CD'
 on:
   push:
     branches:
-      - dev/cicd_pipeline
+      - main
 env:
   TF_VERSION: '1.15.4'
   AWS_REGION: 'us-east-1'
@@ -50,18 +50,18 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           terraform apply -auto-approve -input=false \
             -var="minecraft_username=${{ secrets.MINECRAFT_USERNAME }}"
 
       - name: Wait for ECS Task to Start
-        if: github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: sleep 30
 
       - name: Get Minecraft Server IP
         id: get_ip
-        if: github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           CLUSTER_NAME: "minecraft-servers"
           SERVICE_NAME: "minecraft-vanilla"
@@ -90,7 +90,7 @@ jobs:
     name: 'Print Server IP'
     runs-on: ubuntu-latest
     needs: terraform
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Display Server IP
         run: |
