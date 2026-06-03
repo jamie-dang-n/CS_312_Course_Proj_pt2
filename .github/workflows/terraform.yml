@@ -6,6 +6,7 @@ on:
 env:
   TF_VERSION: '1.15.4'
   AWS_REGION: 'us-east-1'
+  BUCKET_NAME: "minecraft-tf-state"
 jobs:
   terraform:
     name: 'Terraform'
@@ -34,8 +35,6 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Create Terraform State Bucket
-        env:
-          BUCKET_NAME: "minecraft-tf-state_dangjam"
         run: |
           if ! aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
             aws s3api create-bucket \
