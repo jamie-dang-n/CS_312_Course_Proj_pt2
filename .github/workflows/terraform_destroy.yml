@@ -9,8 +9,9 @@ on:
 
 env:
   TF_VERSION: '1.15.4'
-  AWS_REGION: 'us-east-1'
-
+  BUCKET_NAME: ${{ secrets.TF_STATE_BUCKET_NAME }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  
 jobs:
   destroy:
     name: 'Destroy Infrastructure'
@@ -40,7 +41,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
-        run: terraform init 
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=$BUCKET_NAME" \
+            -backend-config="key=minecraft/terraform.tfstate" \
+            -backend-config="region=$AWS_REGION"
 
       - name: Terraform Destroy
         run: |

@@ -5,7 +5,7 @@ on:
       - main
 env:
   TF_VERSION: '1.15.4'
-  AWS_REGION: 'us-east-1'
+  AWS_REGION: ${{ secrets.AWS_REGION }}
   BUCKET_NAME: ${{ secrets.TF_STATE_BUCKET_NAME }}
 jobs:
   terraform:
@@ -110,17 +110,20 @@ jobs:
             --service-name $SERVICE_NAME \
             --query 'taskArns[0]' \
             --output text)
+          echo "Task ARN: $TASK_ARN"
 
           ENI_ID=$(aws ecs describe-tasks \
             --cluster $CLUSTER_NAME \
             --tasks $TASK_ARN \
             --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' \
             --output text)
+          echo "ENI ID: $ENI_ID"
 
           SERVER_IP=$(aws ec2 describe-network-interfaces \
             --network-interface-ids $ENI_ID \
             --query 'NetworkInterfaces[0].Association.PublicIp' \
             --output text)
+          echo "Server IP: $SERVER_IP"
 
           echo "server_ip=$SERVER_IP" >> $GITHUB_OUTPUT
           echo "Minecraft Server IP: \`$SERVER_IP\`" >> $GITHUB_STEP_SUMMARY
