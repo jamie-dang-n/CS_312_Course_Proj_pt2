@@ -39,7 +39,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'push'
         run: |
           terraform plan -no-color -input=false \
             -var="minecraft_username=${{ secrets.MINECRAFT_USERNAME }}"
