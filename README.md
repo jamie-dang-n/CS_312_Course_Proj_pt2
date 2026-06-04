@@ -1,5 +1,5 @@
 # Background
-This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image [\[4\]](#references) and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]](#references), with cost-lowering revisions by [\[2\]](#references). Some modifications were made to use the provided IAM role, `LabRole`, as this project was done on AWS Learner Lab.
+This project fully automates the provisioning, configuring, and setup of a Minecraft server using a Docker image [\[4\]](#references) and Terraform on AWS ECS. Server data is stored on an EFS instance. This project follows the tutorial given by [\[1\]](#references), with cost-lowering revisions by [\[2\]](#references). Some modifications were made to use the provided IAM role, `LabRole`, as this project was done on AWS Learner Lab. You can run Terraform manually or use the GitHub Actions workflows to set up/tear down the server.
 
 # Requirements
 For this, you will need to have:
@@ -7,6 +7,7 @@ For this, you will need to have:
 - [Terraform](https://developer.hashicorp.com/terraform/install) installed
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed, AWS account logged in
 - [Git](https://git-scm.com/), for cloning this repository
+- [GitHub Account](https://github.com/), for the GitHub Actions CI/CD feature
 
 # Architecture Diagram
 ```mermaid
@@ -136,7 +137,7 @@ Clone the repository, then define the following "Repository secrets" variables u
 - `MINECRAFT_USERNAME`: used to whitelist a Minecraft user, giving them access to the server.
 - `TF_STATE_BUCKET_NAME`: used to store Terraform state across runners
 
-## Workflow Steps
+## CI/CD Workflow Steps
 1. Run `git clone https://github.com/jamie-dang-n/CS_312_Course_Proj_pt2.git` to clone this repository.
 2. Set [secret variables](#secrets-variables) in the cloned repository on GitHub under Settings &rarr; Secrets and Variables &rarr; Actions.
 3. `cd` into `CS_312_Course_Proj_pt2`.
