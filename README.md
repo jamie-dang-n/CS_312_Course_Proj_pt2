@@ -159,7 +159,8 @@ If the provided server IP does not work, feel free to rerun the Terraform job to
 6. Run `terraform plan`
 7. Create infrastructure using `terraform apply`
 8. Wait for ECS task to start
-9.  Get the Minecraft Server IP, then print it in the GitHub Actions GUI
+9. Wait 5 minutes before attempting to get server IP, so that the Minecraft task has time to fully start up and run
+10. Get the Minecraft Server IP, then print it in the GitHub Actions GUI
 
 This workflow only triggers on pushes to the `main` branch.
 
