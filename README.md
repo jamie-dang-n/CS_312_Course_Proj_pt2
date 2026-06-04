@@ -97,6 +97,7 @@ The steps of the pipeline are as follows:
     aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID \
     --query 'NetworkInterfaces[0].Association.PublicIp' --output text
     ```
+    - If the output of the above command is "None", wait for a bit before trying again. It is possible that the Minecraft task has not started running yet.
     - Note: The server IP will change, because the IP is not static-- the configuration does not use Elastic IP for cost saving.
     - Optionally, verify that the server is accessible with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html).
 
@@ -137,13 +138,16 @@ Clone the repository, then define the following "Repository secrets" variables u
 2. Set [secret variables](#secrets-variables) in the cloned repository on GitHub under Settings &rarr; Secrets and Variables &rarr; Actions.
 3. `cd` into `CS_312_Course_Proj_pt2`.
 4. Edit `locals.tf` as needed to set variables such as AWS region, VPC CIDR, etc.
-5. When changes get pushed to `main`, 
+5. When changes get pushed to `main`, the pipeline will run
+6. To destroy all resources, go to Actions &rarr; Terraform Destroy and click the "Run workflow" button. 
+   - It'll prompt you to type `destroy` to confirm that you want to run the Terraform Destroy pipeline.
+   - Destroying resources is not done automatically, it must be triggered manually
 
 ## Overview of Files
 
 ### `terraform.yml`
 
-`terraform.yml` does the following:
+`terraform.yml` is used to create the Minecraft server. The workflow does the following:
 
 1. Check out the repository
 2. Set up Terraform
@@ -159,7 +163,7 @@ This workflow only triggers on pushes to the `main` branch.
 
 ### `terraform-destroy.yml`
 
-`terraform-destroy.yml` does the following:
+`terraform-destroy.yml` is used to destroy/clean up all Minecraft server resources. The workflow does the following:
 
 1. Check out the repository
 2. Set up Terraform
@@ -174,7 +178,7 @@ This workflow only triggers manually, after confirming on the GitHub Actions GUI
 # Connecting to the Minecraft Server
 If following "[Running the Minecraft Server](#running-the-minecraft-server)", then run the commands in Step 7 and copy the IP address to directly connect to the server in Minecraft.
 
-If following "[Running via GitHub Actions](#running-via-github-actions)", then navigate to Actions &rarr; (your current workflow) &rarr; "Print Server IP" to view the server's public IP. From there, copy the IP address to directly connect to the server in Minecraft.
+If following "[Running via GitHub Actions](#running-via-github-actions)", then navigate to Actions &rarr; `your current workflow` &rarr; "Print Server IP" to view the server's public IP. From there, copy the IP address to directly connect to the server in Minecraft. (Alternatively, view the "Terraform summary" at Actions &rarr; `your current workflow`.)
 
 
 
