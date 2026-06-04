@@ -123,11 +123,14 @@ aws s3api create-bucket \
 
 If the `terraform.yml` workflow sees that a bucket has already been created, it will continue without failing.
 
-### "Secrets" Variables
+### Configuration Variables
+Clone the repository, then define the following "Repository variables" variable under Settings &rarr; Secrets and Variables &rarr; Actions:
+- `AWS_REGION`: the region your server will be running on
+
+### Secret Variables
 Clone the repository, then define the following "Repository secrets" variables under Settings &rarr; Secrets and Variables &rarr; Actions:
 - Information to access the AWS CLI (given by AWS)
   - `AWS_ACCESS_KEY_ID`
-  - `AWS_REGION`
   - `AWS_SECRET_ACCESS_KEY`
   - `AWS_SESSION_TOKEN`
 - `MINECRAFT_USERNAME`: used to whitelist a Minecraft user, giving them access to the server.
