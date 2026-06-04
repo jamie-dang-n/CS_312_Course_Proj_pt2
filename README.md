@@ -143,6 +143,8 @@ Clone the repository, then define the following "Repository secrets" variables u
    - It'll prompt you to type `destroy` to confirm that you want to run the Terraform Destroy pipeline.
    - Destroying resources is not done automatically, it must be triggered manually
 
+If the provided server IP does not work, feel free to rerun the Terraform job to see if the server IP changed. `terraform apply` won't make additional changes, so it is safe to re-run the entire job to double check/update the server IP.
+
 ## Overview of Files
 
 ### `terraform.yml`

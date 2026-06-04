@@ -79,6 +79,9 @@ jobs:
           CLUSTER_NAME: "minecraft-servers"
           SERVICE_NAME: "minecraft-vanilla"
         run: |
+          echo "Waiting 5 minutes before attempting to get server IP"
+          sleep 300
+
           for i in $(seq 1 20); do
             TASK_ARN=$(aws ecs list-tasks \
               --cluster $CLUSTER_NAME \
