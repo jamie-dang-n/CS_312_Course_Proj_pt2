@@ -4,10 +4,11 @@ This project fully automates the provisioning, configuring, and setup of a Minec
 # Requirements
 For this, you will need to have:
 - An AWS account
-- [Terraform](https://developer.hashicorp.com/terraform/install) installed
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed, AWS account logged in
-- [Git](https://git-scm.com/), for cloning this repository
+- [Terraform (~> 1.15.4)](https://developer.hashicorp.com/terraform/install) installed
+- [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed, AWS account logged in/configured
+- [Git (v2.54.0)](https://git-scm.com/), for cloning this repository
 - [GitHub Account](https://github.com/), for the GitHub Actions CI/CD feature
+- Optionally, [`nmap` (version 7.94SVN)](https://nmap.org/download.html) for verifying that the server is running
 
 # Architecture Diagram
 ```mermaid
