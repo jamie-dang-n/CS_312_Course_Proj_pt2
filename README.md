@@ -21,7 +21,7 @@ graph TD
             SG["Security group - Ingress: 25565,  Egress: all"]
 
             subgraph ECS["ECS cluster"]
-                Task["Fargate Spot Task - Docker image taskitzg/minecraft-server:latest"]
+                Task["Fargate Spot Task - Docker image itzg/minecraft-server:latest"]
             end
 
             EFSMount["EFS mount target - NFS port 2049 (Default)"]
@@ -38,14 +38,14 @@ graph TD
 # Pipeline Diagram
 ```mermaid
 flowchart TD
-    aws["Modify ~/.aws/credentials to store relevant accses keys and session tokens from AWS"] 
+    aws["Modify ~/.aws/credentials to store relevant access keys and session tokens from AWS"] 
     --> clone[Clone the repository] 
     --> runInit["Run `terraform init` to initialize Terraform. Supply AWS S3 Bucket if needed for Terraform state."]
     --> spinServer["Running `terraform plan` followed by `terraform apply` spins up the Minecraft server. Terraform handles setting up the ECS, EFS, and VPC, in ecs.tf, efs.tf, and vpc.tf, respectively. "]
     
     
     spinServer --> ecs["ecs.tf: sets up an AWS Elastic Container Service (ECS) using Minecraft docker image"]
-    spinServer --> efs["efs.tc: sets up AWS Elastic File System (EFS) to be used for storing server data"]
+    spinServer --> efs["efs.tf: sets up AWS Elastic File System (EFS) to be used for storing server data"]
     spinServer --> vpc["vpc.tf: sets up networking through AWS Virtual Private Cloud (VPC)"]
 
     getIP[Run commands defined/displayed by outputs.tf to retrieve server IP]
@@ -56,20 +56,6 @@ flowchart TD
 
     getIP --> connect["Connect to the server using the server IP. (Alternatively, use nmap on the server IP to check that the server is up)"]
 ```
-<!-- ## Written Pipeline Steps
-The steps of the pipeline are as follows:
-1. Modify the file `~/.aws/credentials` to store the relevant access keys and session tokens from AWS
-2. Clone the repository
-3. Run `terraform init` to initialize Terraform
-4. Running `terraform plan` followed by `terraform apply` spins up the Minecraft server. Terraform handles setting up the ECS (Elastic Container Service), EFS (Elastic File System), and VPC (Virtual Private Cloud), in `ecs.tf`, `efs.tf`, and `vpc.tf`, respectively. 
-      - `ecs.tf` sets up an AWS ECS container service using this [Minecraft Docker Image](https://github.com/itzg/docker-minecraft-server)
-      - `efs.tf` sets up an AWS EFS, which the ECS instance uses to store Minecraft server data
-      - `vpc.tf` sets up the AWS VPC used to faciliate networking/connections to the server
-      - `locals.tf` contains configurable data, such as the CIDR to use for the VPC. 
-      -  `variables.tf` contains the Minecraft username(s) to be whitelisted (allowed into the server).
-5. Run the commands in Step 7 of "[Running the Minecraft Server](#running-the-minecraft-server)" to retrieve the server IP
-6. Connect to the Minecraft server using the IP. 
-   - Alternatively, access it with `nmap -sV -Pn -p T:<query_port> <instance_public_ip>`. This will require downloading [`nmap`](https://nmap.org/download.html) -->
 
 # Running the Minecraft Server
 1. Modify the file `~/.aws/credentials` to store the following information from AWS: 
@@ -180,10 +166,10 @@ This workflow only triggers on pushes to the `main` branch.
 6. Destroy all resources with `terraform destroy`
 7. Cleanup possibly-hanging extraneous resources (KMS Alias, CloudWatch Log Groups)
 
-This workflow only triggers manually, after confirming on the GitHub Actions GUI that you want to run the workflow (by writing `delete`). 
+This workflow only triggers manually, after confirming on the GitHub Actions GUI that you want to run the workflow (by writing `destroy`). 
 
 # Connecting to the Minecraft Server
-If following "[Running the Minecraft Server](#running-the-minecraft-server)", then run the commands in Step 7 and copy the IP address to directly connect to the server in Minecraft.
+If following "[Running the Minecraft Server](#running-the-minecraft-server)", then run the commands in Step 9 and copy the IP address to directly connect to the server in Minecraft.
 
 If following "[Running via GitHub Actions](#running-via-github-actions)", then navigate to Actions &rarr; `your current workflow` &rarr; "Print Server IP" to view the server's public IP. From there, copy the IP address to directly connect to the server in Minecraft. (Alternatively, view the "Terraform summary" at Actions &rarr; `your current workflow`.)
 
